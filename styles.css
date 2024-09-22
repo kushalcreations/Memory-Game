@@ -1,54 +1,94 @@
 body {
-    text-align: center;
-    background-color: #011F3F;
-  }
-  
-  #level-title {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 3rem;
-    margin:  5%;
-    color: #FEF2BF;
-  }
-  
+  text-align: center;
+  background-color: #011f3f;
+  margin: 0;
+  padding: 0;
+}
+
+#footer {
+  font-family: "Press Start 2P", cursive;
+  font-size: 1.5rem;
+  margin: 5%;
+  color: #fef2bf;
+}
+
+a {
+  color: #fef2bf;
+  text-decoration: none;
+}
+
+#level-title {
+  font-family: "Press Start 2P", cursive;
+  font-size: 3rem;
+  margin: 5%;
+  color: #fef2bf;
+}
+
+.container {
+  display: block;
+  width: 50%;
+  margin: auto;
+}
+
+.btn {
+  margin: 25px;
+  display: inline-block;
+  height: 200px;
+  width: 200px;
+  border: 10px solid black;
+  border-radius: 20%;
+}
+
+.game-over {
+  background-color: red;
+  opacity: 0.8;
+}
+
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.pressed {
+  box-shadow: 0 0 20px white;
+  background-color: grey;
+}
+
+/* For mobile view */
+@media (max-width: 768px) {
   .container {
-    display: block;
-    width: 50%;
-    margin: auto;
-  
+    width: 80%; /* Wider on mobile */
   }
-  
+
   .btn {
-    margin: 25px;
-    display: inline-block;
-    height: 200px;
-    width: 200px;
-    border: 10px solid black;
-    border-radius: 20%;
+    height: 150px; /* Smaller button height for mobile */
+    width: 150px; /* Smaller button width for mobile */
   }
-  
-  .game-over {
-    background-color: red;
-    opacity: 0.8;
+
+  #level-title {
+    font-size: 2rem; /* Smaller font size for mobile */
   }
-  
-  .red {
-    background-color: red;
+
+  #start-button {
+    display: block !important; /* Ensure start button is displayed on mobile */
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    color: #FEF2BF;
+    background-color: #011F3F;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
   }
-  
-  .green {
-    background-color: green;
-  }
-  
-  .blue {
-    background-color: blue;
-  }
-  
-  .yellow {
-    background-color: yellow;
-  }
-  
-  .pressed {
-    box-shadow: 0 0 20px white;
-    background-color: grey;
-  }
-  
+}
