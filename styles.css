@@ -81,7 +81,7 @@ a {
   }
 
   #start-button {
-    display: block !important; /* Ensure start button is displayed on mobile */
+    /* display: block !important; Ensure start button is displayed on mobile */
     margin: 20px auto;
     padding: 10px 20px;
     font-size: 1.5rem;

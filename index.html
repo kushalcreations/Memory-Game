@@ -1,12 +1,113 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="utf-8">
     <title>Simon Game</title>
-    <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link rel="icon" href="data:,"> <!-- Prevent favicon request -->
+    <style>
+        body {
+            text-align: center;
+            background-color: #011f3f;
+            margin: 0;
+            padding: 0;
+        }
+
+        #footer {
+            font-family: "Press Start 2P", cursive;
+            font-size: 1.5rem;
+            margin: 5%;
+            color: #fef2bf;
+        }
+
+        a {
+            color: #fef2bf;
+            text-decoration: none;
+        }
+
+        #level-title {
+            font-family: "Press Start 2P", cursive;
+            font-size: 3rem;
+            margin: 5%;
+            color: #fef2bf;
+        }
+
+        .container {
+            display: block;
+            width: 50%;
+            margin: auto;
+        }
+
+        .btn {
+            margin: 25px;
+            display: inline-block;
+            height: 200px;
+            width: 200px;
+            border: 10px solid black;
+            border-radius: 20%;
+        }
+
+        .game-over {
+            background-color: red;
+            opacity: 0.8;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .blue {
+            background-color: blue;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .pressed {
+            box-shadow: 0 0 20px white;
+            background-color: grey;
+        }
+
+        /* For mobile view */
+        @media (max-width: 768px) {
+            .container {
+                width: 80%;
+                /* Wider on mobile */
+            }
+
+            .btn {
+                height: 150px;
+                /* Smaller button height for mobile */
+                width: 150px;
+                /* Smaller button width for mobile */
+            }
+
+            #level-title {
+                font-size: 2rem;
+                /* Smaller font size for mobile */
+            }
+
+            #start-button {
+                /* display: block !important; Ensure start button is displayed on mobile */
+                margin: 20px auto;
+                padding: 10px 20px;
+                font-size: 1.5rem;
+                color: #FEF2BF;
+                background-color: #011F3F;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -27,7 +128,122 @@
     <h6 id="footer">created by <a href="https://github.com/kushalcreations">Kushal Kumawat</a></h6>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="game.js" charset="utf-8"></script>
+    <script>
+        var buttonColours = ["red", "blue", "green", "yellow"];
+        var gamePattern = [];
+        var userClickedPattern = [];
+        var started = false;
+        var level = 0;
+
+        $(document).ready(function () {
+            // Show/hide button based on screen size on initial load
+            if ($(window).width() <= 768) {
+                $("#start-button").show();
+                console.log("Mobile view detected: Button shown");
+            } else {
+                $("#start-button").hide();
+                console.log("Desktop view detected: Button hidden");
+            }
+
+            // Adjust button visibility when window is resized
+            $(window).resize(function () {
+                if ($(window).width() <= 768) {
+                    $("#start-button").show();
+                    console.log("Resized to mobile view: Button shown");
+                } else {
+                    $("#start-button").hide();
+                    console.log("Resized to desktop view: Button hidden");
+                }
+            });
+
+            // Start game on keypress for desktop or button click for mobile
+            $(document).keypress(function (event) {
+                if (!started && (event.key === "a" || event.key === "A")) {
+                    startGame();
+                }
+            });
+
+            // Start game when Start button is clicked on mobile
+            $("#start-button").click(function () {
+                startGame();
+            });
+
+            // Button click event for the colored game buttons
+            $(".btn").click(function () {
+                var userChosenColour = $(this).attr("id");
+                userClickedPattern.push(userChosenColour);
+
+                playSound(userChosenColour);
+                animatePress(userChosenColour);
+
+                checkAnswer(userClickedPattern.length - 1);
+            });
+        });
+
+        // Function to start the game
+        function startGame() {
+            if (!started) {
+                $("#level-title").text("Level " + level);
+                nextSequence();
+                started = true;
+                $("#start-button").hide(); // Hide the button once the game starts
+            }
+        }
+
+        function checkAnswer(currentLevel) {
+            if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
+                if (userClickedPattern.length === gamePattern.length) {
+                    setTimeout(function () {
+                        nextSequence();
+                    }, 1000);
+                }
+            } else {
+                playSound("wrong");
+                $("body").addClass("game-over");
+                $("#level-title").text("Game Over, Press Any Key to Restart");
+
+                setTimeout(function () {
+                    $("body").removeClass("game-over");
+                }, 200);
+
+                startOver();
+            }
+        }
+
+        function nextSequence() {
+            userClickedPattern = [];
+            level++;
+            $("#level-title").text("Level " + level);
+            var randomNumber = Math.floor(Math.random() * 4);
+            var randomChosenColour = buttonColours[randomNumber];
+            gamePattern.push(randomChosenColour);
+
+            $("#" + randomChosenColour)
+                .fadeIn(100)
+                .fadeOut(100)
+                .fadeIn(100);
+            playSound(randomChosenColour);
+        }
+
+        function animatePress(currentColor) {
+            $("#" + currentColor).addClass("pressed");
+            setTimeout(function () {
+                $("#" + currentColor).removeClass("pressed");
+            }, 100);
+        }
+
+        function playSound(name) {
+            var audio = new Audio("sounds/" + name + ".mp3");
+            audio.play();
+        }
+
+        function startOver() {
+            level = 0;
+            gamePattern = [];
+            started = false;
+        }
+
+    </script>
 </body>
 
 </html>
